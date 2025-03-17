@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, PlayCircle, Clock, Calendar, Bell, Heart, Shield, ChevronRight } from "lucide-react";
 import { AppButton } from "@/components/ui/AppButton";
 import { AppCard } from "@/components/ui/AppCard";
-import { Badge } from "@/components/ui/Badge";
+import { Badge } from "@/components/ui/badge"; // Changed from Badge to badge
 import { mockApi, Department, Doctor } from "@/lib/mockApi";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
