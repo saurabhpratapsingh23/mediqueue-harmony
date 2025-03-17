@@ -49,7 +49,7 @@ const LandingPage = () => {
         <div className="container mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="flex flex-col space-y-6 animate-slide-up" style={{ "--index": 0 } as any}>
-              <Badge variant="info" size="lg" className="w-fit">
+              <Badge variant="secondary" className="w-fit bg-mediq-100 text-mediq-800">
                 Smart Healthcare Queue Management
               </Badge>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-balance tracking-tight">
@@ -126,7 +126,7 @@ const LandingPage = () => {
       <section className="py-16 md:py-24 bg-slate-50">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
-            <Badge variant="info" className="mb-4">Features</Badge>
+            <Badge variant="secondary" className="mb-4 bg-mediq-100 text-mediq-800">Features</Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Experience the MediQ difference</h2>
             <p className="text-muted-foreground">
               Our innovative features combine to create a seamless healthcare experience, 
@@ -281,7 +281,7 @@ const LandingPage = () => {
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
-            <Badge variant="info" className="mb-4">Specialties</Badge>
+            <Badge variant="secondary" className="mb-4 bg-mediq-100 text-mediq-800">Specialties</Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Our medical departments</h2>
             <p className="text-muted-foreground">
               MediQ provides queue management solutions across all major medical specialties, 
@@ -434,7 +434,7 @@ const LandingPage = () => {
       <section className="py-16 md:py-24 bg-slate-50">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
-            <Badge variant="info" className="mb-4">Our Team</Badge>
+            <Badge variant="secondary" className="mb-4 bg-mediq-100 text-mediq-800">Our Team</Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Meet our specialists</h2>
             <p className="text-muted-foreground">
               Our team of experienced healthcare professionals is dedicated to 
@@ -533,7 +533,7 @@ const LandingPage = () => {
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center relative z-10">
               <div>
-                <Badge variant="glass" size="lg" className="mb-4 w-fit">
+                <Badge variant="outline" className="mb-4 w-fit bg-white/40 backdrop-blur-sm">
                   Ready to get started?
                 </Badge>
                 <h2 className="text-3xl md:text-4xl font-bold mb-4">
