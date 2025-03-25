@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { AppButton } from "@/components/ui/AppButton";
 import { Menu, X, User, LogOut } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { cn } from "@/lib/utils";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -40,7 +41,7 @@ const Navbar = () => {
           to="/"
           className="flex items-center space-x-2 text-foreground font-semibold text-xl"
         >
-          <div className="h-8 w-8 rounded-lg bg-mediq-500 flex items-center justify-center text-white font-bold">
+          <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center text-white font-bold">
             M
           </div>
           <span className="hidden sm:inline">MediQ</span>
@@ -49,31 +50,40 @@ const Navbar = () => {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-8">
           <Link
-            to="/"
+            to="/landing"
             className={cn(
-              "text-sm font-medium transition-colors hover:text-mediq-600",
-              location.pathname === "/" ? "text-mediq-600" : "text-foreground/80"
+              "text-sm font-medium transition-colors hover:text-primary",
+              location.pathname === "/landing" ? "text-primary" : "text-foreground/80"
             )}
           >
             Home
           </Link>
           <Link
-            to="/queue"
+            to="/queue-status"
             className={cn(
-              "text-sm font-medium transition-colors hover:text-mediq-600",
-              location.pathname === "/queue" ? "text-mediq-600" : "text-foreground/80"
+              "text-sm font-medium transition-colors hover:text-primary",
+              location.pathname === "/queue-status" ? "text-primary" : "text-foreground/80"
             )}
           >
             Queue Status
           </Link>
           <Link
-            to="/book"
+            to="/book-appointment"
             className={cn(
-              "text-sm font-medium transition-colors hover:text-mediq-600",
-              location.pathname === "/book" ? "text-mediq-600" : "text-foreground/80"
+              "text-sm font-medium transition-colors hover:text-primary",
+              location.pathname === "/book-appointment" ? "text-primary" : "text-foreground/80"
             )}
           >
             Book Appointment
+          </Link>
+          <Link
+            to="/how-it-works"
+            className={cn(
+              "text-sm font-medium transition-colors hover:text-primary",
+              location.pathname === "/how-it-works" ? "text-primary" : "text-foreground/80"
+            )}
+          >
+            How It Works
           </Link>
         </nav>
 
@@ -93,10 +103,10 @@ const Navbar = () => {
                 <div className="absolute right-0 top-full mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                   <div className="py-1">
                     <Link
-                      to="/profile"
+                      to="/records"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
-                      Your Profile
+                      Medical Records
                     </Link>
                     <button
                       onClick={logout}
@@ -113,12 +123,12 @@ const Navbar = () => {
             </div>
           ) : (
             <div className="flex items-center space-x-3">
-              <Link to="/auth?mode=login">
+              <Link to="/sign-in">
                 <AppButton variant="outline" size="sm">
                   Sign in
                 </AppButton>
               </Link>
-              <Link to="/auth?mode=register">
+              <Link to="/sign-up">
                 <AppButton size="sm">Get Started</AppButton>
               </Link>
             </div>
@@ -144,37 +154,48 @@ const Navbar = () => {
         <div className="container px-4 mx-auto flex flex-col space-y-6 py-8">
           <nav className="flex flex-col space-y-4">
             <Link
-              to="/"
+              to="/landing"
               className={cn(
                 "px-4 py-3 rounded-md text-sm font-medium transition-colors",
-                location.pathname === "/"
-                  ? "bg-accent text-mediq-600"
+                location.pathname === "/landing"
+                  ? "bg-accent text-primary"
                   : "hover:bg-accent/50"
               )}
             >
               Home
             </Link>
             <Link
-              to="/queue"
+              to="/queue-status"
               className={cn(
                 "px-4 py-3 rounded-md text-sm font-medium transition-colors",
-                location.pathname === "/queue"
-                  ? "bg-accent text-mediq-600"
+                location.pathname === "/queue-status"
+                  ? "bg-accent text-primary"
                   : "hover:bg-accent/50"
               )}
             >
               Queue Status
             </Link>
             <Link
-              to="/book"
+              to="/book-appointment"
               className={cn(
                 "px-4 py-3 rounded-md text-sm font-medium transition-colors",
-                location.pathname === "/book"
-                  ? "bg-accent text-mediq-600"
+                location.pathname === "/book-appointment"
+                  ? "bg-accent text-primary"
                   : "hover:bg-accent/50"
               )}
             >
               Book Appointment
+            </Link>
+            <Link
+              to="/how-it-works"
+              className={cn(
+                "px-4 py-3 rounded-md text-sm font-medium transition-colors",
+                location.pathname === "/how-it-works"
+                  ? "bg-accent text-primary"
+                  : "hover:bg-accent/50"
+              )}
+            >
+              How It Works
             </Link>
             {user ? (
               <>
@@ -183,22 +204,22 @@ const Navbar = () => {
                   className={cn(
                     "px-4 py-3 rounded-md text-sm font-medium transition-colors",
                     location.pathname === "/dashboard"
-                      ? "bg-accent text-mediq-600"
+                      ? "bg-accent text-primary"
                       : "hover:bg-accent/50"
                   )}
                 >
                   Dashboard
                 </Link>
                 <Link
-                  to="/profile"
+                  to="/records"
                   className={cn(
                     "px-4 py-3 rounded-md text-sm font-medium transition-colors",
-                    location.pathname === "/profile"
-                      ? "bg-accent text-mediq-600"
+                    location.pathname === "/records"
+                      ? "bg-accent text-primary"
                       : "hover:bg-accent/50"
                   )}
                 >
-                  Profile
+                  Medical Records
                 </Link>
                 <button
                   onClick={logout}
@@ -210,12 +231,12 @@ const Navbar = () => {
               </>
             ) : (
               <div className="mt-4 space-y-3">
-                <Link to="/auth?mode=login" className="block">
+                <Link to="/sign-in" className="block">
                   <AppButton variant="outline" className="w-full">
                     Sign in
                   </AppButton>
                 </Link>
-                <Link to="/auth?mode=register" className="block">
+                <Link to="/sign-up" className="block">
                   <AppButton className="w-full">Get Started</AppButton>
                 </Link>
               </div>
@@ -228,6 +249,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-// Import the cn utility function
-import { cn } from "@/lib/utils";

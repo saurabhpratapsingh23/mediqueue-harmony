@@ -17,13 +17,15 @@ const Index = () => {
         <p className="text-xl text-slate-600 mb-8">
           Experience the future of healthcare queue management with our innovative platform.
         </p>
-        <Button 
-          onClick={goToLandingPage} 
-          className="text-lg px-6 py-6 h-auto"
-        >
-          Enter MediQ
-          <ArrowRight className="ml-2 h-5 w-5" />
-        </Button>
+        <div className="space-x-4">
+          <Button 
+            onClick={goToLandingPage} 
+            className="text-lg px-6 py-6 h-auto"
+          >
+            Enter MediQ
+            <ArrowRight className="ml-2 h-5 w-5" />
+          </Button>
+        </div>
       </div>
     </div>
   );
