@@ -38,7 +38,7 @@ const Navbar = () => {
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
         {/* Logo */}
         <Link
-          to="/"
+          to="/landing"
           className="flex items-center space-x-2 text-foreground font-semibold text-xl"
         >
           <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center text-white font-bold">
@@ -84,6 +84,24 @@ const Navbar = () => {
             )}
           >
             How It Works
+          </Link>
+          <Link
+            to="/departments"
+            className={cn(
+              "text-sm font-medium transition-colors hover:text-primary",
+              location.pathname === "/departments" ? "text-primary" : "text-foreground/80"
+            )}
+          >
+            Departments
+          </Link>
+          <Link
+            to="/doctors"
+            className={cn(
+              "text-sm font-medium transition-colors hover:text-primary",
+              location.pathname === "/doctors" ? "text-primary" : "text-foreground/80"
+            )}
+          >
+            Doctors
           </Link>
         </nav>
 
@@ -196,6 +214,28 @@ const Navbar = () => {
               )}
             >
               How It Works
+            </Link>
+            <Link
+              to="/departments"
+              className={cn(
+                "px-4 py-3 rounded-md text-sm font-medium transition-colors",
+                location.pathname === "/departments"
+                  ? "bg-accent text-primary"
+                  : "hover:bg-accent/50"
+              )}
+            >
+              Departments
+            </Link>
+            <Link
+              to="/doctors"
+              className={cn(
+                "px-4 py-3 rounded-md text-sm font-medium transition-colors",
+                location.pathname === "/doctors"
+                  ? "bg-accent text-primary"
+                  : "hover:bg-accent/50"
+              )}
+            >
+              Doctors
             </Link>
             {user ? (
               <>

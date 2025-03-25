@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -33,6 +33,11 @@ const SignIn = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 text-center">
+          <Link to="/landing" className="flex justify-center mb-4">
+            <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center text-white font-bold">
+              M
+            </div>
+          </Link>
           <CardTitle className="text-2xl font-bold">Sign in to MediQ</CardTitle>
           <p className="text-sm text-muted-foreground">
             Enter your credentials to access your account
@@ -83,6 +88,11 @@ const SignIn = () => {
             <Button variant="link" className="px-1 text-primary" onClick={() => navigate("/sign-up")}>
               Sign up
             </Button>
+          </div>
+          <div className="mt-8 text-center text-sm">
+            <Link to="/landing" className="text-muted-foreground hover:text-primary">
+              Return to Home
+            </Link>
           </div>
         </CardContent>
       </Card>

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, PlayCircle, Clock, Calendar, Bell, Heart, Shield, ChevronRight } from "lucide-react";
 import { AppButton } from "@/components/ui/AppButton";
 import { AppCard } from "@/components/ui/AppCard";
-import { Badge } from "@/components/ui/badge"; // Changed from Badge to badge
+import { Badge } from "@/components/ui/badge"; 
 import { mockApi, Department, Doctor } from "@/lib/mockApi";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -60,23 +60,25 @@ const LandingPage = () => {
                 the healthcare experience through intelligent queue management and predictive wait times.
               </p>
               <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 pt-4">
-                <Link to="/book">
+                <Link to="/book-appointment">
                   <AppButton size="xl" className="w-full sm:w-auto">
                     Book an Appointment
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </AppButton>
                 </Link>
-                <Link to="/queue">
+                <Link to="/queue-status">
                   <AppButton variant="outline" size="xl" className="w-full sm:w-auto">
                     Check Queue Status
                   </AppButton>
                 </Link>
               </div>
               <div className="flex items-center space-x-2 pt-2">
-                <PlayCircle className="h-5 w-5 text-mediq-600" />
-                <span className="text-sm font-medium">
-                  Watch how it works
-                </span>
+                <Link to="/how-it-works" className="flex items-center hover:text-mediq-600">
+                  <PlayCircle className="h-5 w-5 text-mediq-600" />
+                  <span className="text-sm font-medium ml-2">
+                    Watch how it works
+                  </span>
+                </Link>
               </div>
             </div>
             <div className="lg:ml-auto relative animate-slide-up" style={{ "--index": 1 } as any}>
@@ -149,7 +151,7 @@ const LandingPage = () => {
                 Know exactly how long you'll wait before you arrive, with continuously updated estimates.
               </p>
               <div className="mt-4 pt-4 border-t">
-                <Link to="/queue" className="text-mediq-600 hover:text-mediq-700 text-sm font-medium inline-flex items-center">
+                <Link to="/queue-status" className="text-mediq-600 hover:text-mediq-700 text-sm font-medium inline-flex items-center">
                   Learn more
                   <ChevronRight className="ml-1 h-4 w-4" />
                 </Link>
@@ -170,7 +172,7 @@ const LandingPage = () => {
                 Book appointments in seconds with our intuitive system that matches you with the right specialist.
               </p>
               <div className="mt-4 pt-4 border-t">
-                <Link to="/book" className="text-mediq-600 hover:text-mediq-700 text-sm font-medium inline-flex items-center">
+                <Link to="/book-appointment" className="text-mediq-600 hover:text-mediq-700 text-sm font-medium inline-flex items-center">
                   Book now
                   <ChevronRight className="ml-1 h-4 w-4" />
                 </Link>
@@ -191,7 +193,7 @@ const LandingPage = () => {
                 Receive timely updates about your queue position, so you can arrive just when you're needed.
               </p>
               <div className="mt-4 pt-4 border-t">
-                <Link to="/auth?mode=register" className="text-mediq-600 hover:text-mediq-700 text-sm font-medium inline-flex items-center">
+                <Link to="/sign-up" className="text-mediq-600 hover:text-mediq-700 text-sm font-medium inline-flex items-center">
                   Sign up
                   <ChevronRight className="ml-1 h-4 w-4" />
                 </Link>
@@ -212,7 +214,7 @@ const LandingPage = () => {
                 Our AI-powered symptom assessment helps prioritize cases based on urgency.
               </p>
               <div className="mt-4 pt-4 border-t">
-                <Link to="/book" className="text-green-600 hover:text-green-700 text-sm font-medium inline-flex items-center">
+                <Link to="/book-appointment" className="text-green-600 hover:text-green-700 text-sm font-medium inline-flex items-center">
                   Try it now
                   <ChevronRight className="ml-1 h-4 w-4" />
                 </Link>
@@ -233,7 +235,7 @@ const LandingPage = () => {
                 Access your complete medical history securely, anytime you need it.
               </p>
               <div className="mt-4 pt-4 border-t">
-                <Link to="/profile" className="text-mediq-600 hover:text-mediq-700 text-sm font-medium inline-flex items-center">
+                <Link to="/records" className="text-mediq-600 hover:text-mediq-700 text-sm font-medium inline-flex items-center">
                   View records
                   <ChevronRight className="ml-1 h-4 w-4" />
                 </Link>
@@ -267,7 +269,7 @@ const LandingPage = () => {
                 Skip the line with our contactless digital check-in process from your mobile device.
               </p>
               <div className="mt-4 pt-4 border-t">
-                <Link to="/auth?mode=register" className="text-mediq-600 hover:text-mediq-700 text-sm font-medium inline-flex items-center">
+                <Link to="/sign-up" className="text-mediq-600 hover:text-mediq-700 text-sm font-medium inline-flex items-center">
                   Get started
                   <ChevronRight className="ml-1 h-4 w-4" />
                 </Link>
@@ -302,7 +304,7 @@ const LandingPage = () => {
               departments.map((department, index) => (
                 <Link 
                   key={department.id} 
-                  to={`/book?department=${department.id}`}
+                  to={`/book-appointment?department=${department.id}`}
                   className="group"
                 >
                   <AppCard 
@@ -420,7 +422,7 @@ const LandingPage = () => {
           </div>
           
           <div className="text-center mt-10">
-            <Link to="/book">
+            <Link to="/departments">
               <AppButton variant="outline">
                 View All Departments
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -490,7 +492,7 @@ const LandingPage = () => {
                         </div>
                         <span className="ml-2 text-sm">{doctor.rating.toFixed(1)}</span>
                       </div>
-                      <Link to={`/book?doctor=${doctor.id}`}>
+                      <Link to={`/book-appointment?doctor=${doctor.id}`}>
                         <AppButton 
                           variant="glass" 
                           size="sm" 
@@ -507,7 +509,7 @@ const LandingPage = () => {
           </div>
           
           <div className="text-center mt-10">
-            <Link to="/book">
+            <Link to="/doctors">
               <AppButton variant="outline">
                 View All Doctors
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -544,12 +546,12 @@ const LandingPage = () => {
                   Book your appointment today and say goodbye to long wait times.
                 </p>
                 <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
-                  <Link to="/auth?mode=register">
+                  <Link to="/sign-up">
                     <AppButton size="lg">
                       Create Account
                     </AppButton>
                   </Link>
-                  <Link to="/book">
+                  <Link to="/book-appointment">
                     <AppButton variant="outline" size="lg">
                       Book Without Account
                     </AppButton>
