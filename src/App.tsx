@@ -32,6 +32,9 @@ import SystemStatistics from "./pages/admin/SystemStatistics";
 import ViewAppointments from "./pages/ViewAppointments";
 import PatientDashboard from "./pages/PatientDashboard";
 import ManageQueue from "./pages/ManageQueue";
+import DoctorDashboard from "./pages/DoctorDashboard";
+import DoctorProfile from "./pages/DoctorProfile";
+import PatientRecords from './pages/PatientRecords';
 
 const queryClient = new QueryClient();
 
@@ -113,6 +116,7 @@ const App = () => (
                   <ManageQueue />
                 </StaffRoute>
               } />
+              <Route path="/patient-records" element={<ProtectedRoute><PatientRecords /></ProtectedRoute>} />
 
               {/* Admin routes */}
               <Route path="/admin/departments" element={
@@ -129,6 +133,23 @@ const App = () => (
                 <AdminRoute>
                   <SystemStatistics />
                 </AdminRoute>
+              } />
+
+              {/* Doctor routes */}
+              <Route path="/doctor-dashboard" element={
+                <ProtectedRoute>
+                  <DoctorDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/view-appointments" element={
+                <ProtectedRoute>
+                  <ViewAppointments />
+                </ProtectedRoute>
+              } />
+              <Route path="/doctor-profile" element={
+                <DoctorRoute>
+                  <DoctorProfile />
+                </DoctorRoute>
               } />
             </Route>
             

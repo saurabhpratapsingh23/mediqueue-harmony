@@ -15,6 +15,7 @@ interface User {
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  isAuthenticated: boolean;
   login: (email: string, password: string, token: string) => Promise<void>;
   register: (name: string, email: string, password: string, role: UserRole) => Promise<void>;
   logout: () => void;
@@ -43,6 +44,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  const isAuthenticated = !!user;
 
   // Check for stored token and user on mount
   useEffect(() => {
@@ -163,6 +166,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       value={{
         user,
         loading,
+        isAuthenticated,
         login,
         register,
         logout,

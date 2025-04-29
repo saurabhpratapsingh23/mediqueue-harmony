@@ -1,12 +1,68 @@
- 
+Algorithm HospitalQueueManagementSystem
+Input: User Inputs (registration, login, appointment booking, attendance marking)
+Output: Successful registration, login, appointment management, attendance tracking
 
+Step 1: User Registration
+    1.1 Receive registration details (name, email, password, role)
+    1.2 If email already exists:
+        Return "User already exists"
+    1.3 Encrypt password securely
+    1.4 Save user in User table with appropriate role (PATIENT / DOCTOR / ADMIN)
 
-#api endpoints for CRUD operation for appointment
- | Endpoint | Method | Auth Required | Purpose
- | /api/appointments | GET | ✅ Yes (Admin/Patient) | Get all appointments
- | /api/appointments/{id} | GET | ✅ Yes (Admin/Patient) | Get appointment by ID
- | /api/appointments/patient/{patientId} | GET | ✅ Yes (Patient) | Get appointments by patient
- | /api/appointments | POST | ✅ Yes (Patient) | Book appointment (auto-block slot, send emails)
- | /api/appointments/cancel/{appointmentId} | PUT | ✅ Yes (Patient) | Cancel appointment (auto-free slot, send emails)
- | /api/appointments/{id} | DELETE | ✅ Yes (Admin) | Delete appointment permanently
+Step 2: User Login
+    2.1 Receive email and password
+    2.2 Fetch user by email
+    2.3 If user not found, return "Invalid credentials"
+    2.4 Validate password using encrypted comparison
+    2.5 Generate JWT Token containing User ID and Role
+    2.6 Return Token to frontend
 
+Step 3: Doctor Attendance Management
+    3.1 On successful login (role = DOCTOR):
+        a. Automatically check if attendance exists for today
+            i. If not present, create attendance record (status = PRESENT)
+    3.2 End of day:
+        a. Automatically mark ABSENT for doctors who didn't login (optional)
+
+Step 4: TimeSlot Management
+    4.1 Admin / Doctor pre-creates available TimeSlots (date, time, doctorId)
+    4.2 TimeSlots are initially marked as available = true
+
+Step 5: Appointment Booking
+    5.1 Patient selects Doctor, Date, TimeSlot
+    5.2 Frontend sends AppointmentRequest to backend with doctorId, date, time, symptoms
+    5.3 Backend verifies:
+        a. Patient's validity (from token)
+        b. Doctor existence
+        c. TimeSlot availability
+    5.4 If TimeSlot available:
+        a. Mark TimeSlot available = false
+        b. Create Appointment with status = SCHEDULED
+        c. Save Appointment record
+        d. Send Email notifications to Doctor and Patient
+    5.5 Else:
+        a. Return "Slot Already Booked" error
+
+Step 6: Appointment Cancellation
+    6.1 Patient or Admin initiates cancellation request
+    6.2 Backend verifies appointment exists and is not already cancelled
+    6.3 Update appointment status = CANCELLED
+    6.4 Free corresponding TimeSlot (available = true)
+    6.5 Send Email notifications about cancellation
+
+Step 7: Notification Management
+    7.1 Whenever booking or cancellation happens:
+        a. Email is triggered to respective Patient and Doctor with details
+    7.2 All email operations are logged safely
+
+Step 8: Queue Management (optional)
+    8.1 Appointments are assigned queueNumbers based on booking order
+    8.2 EstimatedWaitTime is calculated based on slot timings
+    8.3 Frontend can display patient's position in queue dynamically
+
+Step 9: Frontend-Backend Communication
+    9.1 All frontend requests carry JWT Token
+    9.2 CORS Policy allows http://localhost:8081 to interact with http://localhost:8080
+    9.3 Backend verifies token, extracts user information securely
+
+End Algorithm

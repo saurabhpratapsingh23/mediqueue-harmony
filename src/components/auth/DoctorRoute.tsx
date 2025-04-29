@@ -5,17 +5,20 @@ interface DoctorRouteProps {
   children: React.ReactNode;
 }
 
-const DoctorRoute: React.FC<DoctorRouteProps> = ({ children }) => {
-  const { user, loading } = useAuth();
+const DoctorRoute = ({ children }: DoctorRouteProps) => {
+  const { user, isAuthenticated } = useAuth();
 
-  if (loading) {
-    return <div>Loading...</div>;
+  // If not authenticated, redirect to login
+  if (!isAuthenticated) {
+    return <Navigate to="/sign-in" replace />;
   }
 
-  if (!user || user.role !== "doctor") {
-    return <Navigate to="/login" replace />;
+  // If authenticated but not a doctor, redirect to dashboard
+  if (user?.role !== "doctor") {
+    return <Navigate to="/dashboard" replace />;
   }
 
+  // If authenticated and is a doctor, render the protected content
   return <>{children}</>;
 };
 

@@ -252,5 +252,12 @@ export const mockApi = {
     mockAppointments[appointmentIndex].status = 'CANCELLED';
     
     return { success: true };
+  },
+
+  // Get all appointments (for doctor dashboard)
+  getAllAppointments: async (): Promise<MockAppointment[]> => {
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 500));
+    return [...mockAppointments];
   }
 }; 
