@@ -1,4 +1,3 @@
-
 // Types
 export type Department = {
   id: string;
@@ -72,6 +71,23 @@ export type MedicalRecord = {
   diagnosis: string;
   prescription?: string;
   notes?: string;
+};
+
+export type QueuePatient = {
+  id: string;
+  patientId: string;
+  patientName: string;
+  priority: "high" | "medium" | "low";
+  status: "waiting" | "in-progress" | "completed" | "cancelled";
+  waitTime: number; // in minutes
+  department: string;
+  doctorId?: string;
+  doctorName?: string;
+  contact: string;
+  email: string;
+  address: string;
+  notes?: string;
+  arrivalTime: string;
 };
 
 // Mock data
@@ -361,6 +377,89 @@ const generateMockMedicalRecords = (patientId: string): MedicalRecord[] => {
   
   return records;
 };
+
+export const mockQueuePatients: QueuePatient[] = [
+  {
+    id: "q1",
+    patientId: "P1001",
+    patientName: "John Smith",
+    priority: "high",
+    status: "waiting",
+    waitTime: 15,
+    department: "Cardiology",
+    doctorId: "D101",
+    doctorName: "Dr. Sarah Johnson",
+    contact: "+1 (555) 123-4567",
+    email: "john.smith@example.com",
+    address: "123 Main St, Anytown, USA",
+    notes: "Patient reported chest pain",
+    arrivalTime: "2023-05-15T09:00:00",
+  },
+  {
+    id: "q2",
+    patientId: "P1002",
+    patientName: "Emily Johnson",
+    priority: "medium",
+    status: "in-progress",
+    waitTime: 5,
+    department: "Pediatrics",
+    doctorId: "D102",
+    doctorName: "Dr. Michael Brown",
+    contact: "+1 (555) 234-5678",
+    email: "emily.johnson@example.com",
+    address: "456 Oak Ave, Somewhere, USA",
+    notes: "Regular checkup",
+    arrivalTime: "2023-05-15T09:15:00",
+  },
+  {
+    id: "q3",
+    patientId: "P1003",
+    patientName: "Michael Brown",
+    priority: "low",
+    status: "waiting",
+    waitTime: 30,
+    department: "Orthopedics",
+    doctorId: "D103",
+    doctorName: "Dr. Lisa Davis",
+    contact: "+1 (555) 345-6789",
+    email: "michael.brown@example.com",
+    address: "789 Pine Rd, Nowhere, USA",
+    notes: "Follow-up for knee surgery",
+    arrivalTime: "2023-05-15T09:30:00",
+  },
+  {
+    id: "q4",
+    patientId: "P1004",
+    patientName: "Sarah Davis",
+    priority: "medium",
+    status: "waiting",
+    waitTime: 20,
+    department: "Dermatology",
+    doctorId: "D104",
+    doctorName: "Dr. Robert Wilson",
+    contact: "+1 (555) 456-7890",
+    email: "sarah.davis@example.com",
+    address: "321 Elm St, Everywhere, USA",
+    notes: "Skin rash",
+    arrivalTime: "2023-05-15T10:00:00",
+  },
+  {
+    id: "q5",
+    patientId: "P1005",
+    patientName: "Robert Wilson",
+    priority: "high",
+    status: "waiting",
+    waitTime: 10,
+    department: "Emergency",
+    doctorId: "D105",
+    doctorName: "Dr. Jennifer Taylor",
+    contact: "+1 (555) 567-8901",
+    email: "robert.wilson@example.com",
+    address: "654 Maple Dr, Anywhere, USA",
+    notes: "Urgent consultation required",
+    arrivalTime: "2023-05-15T10:15:00",
+  },
+];
 
 // Mock API functions
 export const mockApi = {

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -17,16 +16,50 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState<"patient" | "doctor" | "admin">("patient");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(null);
     
     try {
+      // Make sure we have a valid API URL
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+      const response = await fetch(`${apiUrl}/api/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: name,
+          email: email,
+          password: password,
+          role: role.toUpperCase(),
+        }),
+      });
+
+      const contentType = response.headers.get("content-type");
+      let errorMessage = "Registration failed";
+
+      if (contentType && contentType.includes("application/json")) {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorMessage;
+      } else {
+        const textError = await response.text();
+        errorMessage = textError || errorMessage;
+      }
+
+      if (!response.ok) {
+        throw new Error(errorMessage);
+      }
+
+      // Call the register function from auth context to handle the successful registration
       await register(name, email, password, role);
       // Auth context handles redirection
     } catch (error) {
       console.error("Registration failed", error);
+      setError(error instanceof Error ? error.message : "Registration failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -102,6 +135,11 @@ const SignUp = () => {
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? "Creating account..." : "Create account"}
             </Button>
+            {error && (
+              <div className="text-red-500 text-sm text-center mt-2">
+                {error}
+              </div>
+            )}
           </form>
           <div className="mt-4 text-center text-sm">
             Already have an account?{" "}

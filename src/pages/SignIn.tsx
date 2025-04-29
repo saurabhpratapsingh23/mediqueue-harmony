@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -10,20 +9,48 @@ import { Lock, Mail } from "lucide-react";
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Get the redirect path from location state, default to dashboard
+  const from = (location.state as any)?.from?.pathname || "/dashboard";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(null);
     
     try {
-      await login(email, password);
-      // Auth context handles redirection
+      // Make sure we have a valid API URL
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+      const response = await fetch(`${apiUrl}/api/auth/login?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Login failed");
+      }
+
+      // Store the token in localStorage
+      localStorage.setItem("token", data.token);
+      
+      // Call the auth context's login function with the token
+      await login(email, password, data.token);
+      
+      // Redirect to the saved path or dashboard
+      navigate(from, { replace: true });
     } catch (error) {
       console.error("Login failed", error);
+      setError(error instanceof Error ? error.message : "Login failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -82,6 +109,11 @@ const SignIn = () => {
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? "Signing in..." : "Sign in"}
             </Button>
+            {error && (
+              <div className="text-red-500 text-sm text-center mt-2">
+                {error}
+              </div>
+            )}
           </form>
           <div className="mt-4 text-center text-sm">
             Don't have an account?{" "}

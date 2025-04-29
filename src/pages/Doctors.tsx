@@ -1,12 +1,13 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { AppCard } from "@/components/ui/AppCard";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Calendar, Star, UserRound } from "lucide-react";
+import { Search, Calendar, Star, UserRound, Loader2 } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { toast } from "sonner";
 
 interface Doctor {
   id: string;
@@ -19,82 +20,60 @@ interface Doctor {
   image?: string;
 }
 
-const doctors: Doctor[] = [
-  {
-    id: "dr1",
-    name: "Dr. Sarah Thompson",
-    department: "Cardiology",
-    specialty: "Heart Failure, Arrhythmias",
-    experience: "15 years",
-    availability: "Mon, Wed, Fri",
-    rating: 4.8,
-    image: "/placeholder.svg"
-  },
-  {
-    id: "dr2",
-    name: "Dr. Michael Brown",
-    department: "Orthopedics",
-    specialty: "Sports Medicine, Joint Replacement",
-    experience: "12 years",
-    availability: "Tue, Thu, Sat",
-    rating: 4.7,
-    image: "/placeholder.svg"
-  },
-  {
-    id: "dr3",
-    name: "Dr. Jennifer Davis",
-    department: "Neurology",
-    specialty: "Headache, Epilepsy",
-    experience: "10 years",
-    availability: "Mon, Tue, Thu",
-    rating: 4.9,
-    image: "/placeholder.svg"
-  },
-  {
-    id: "dr4",
-    name: "Dr. Robert Wilson",
-    department: "Dermatology",
-    specialty: "Cosmetic Dermatology, Skin Cancer",
-    experience: "8 years",
-    availability: "Wed, Fri, Sat",
-    rating: 4.6,
-    image: "/placeholder.svg"
-  },
-  {
-    id: "dr5",
-    name: "Dr. Emma Johnson",
-    department: "Pediatrics",
-    specialty: "Neonatology, Developmental Disorders",
-    experience: "14 years",
-    availability: "Mon, Wed, Fri",
-    rating: 4.9,
-    image: "/placeholder.svg"
-  },
-  {
-    id: "dr6",
-    name: "Dr. John Smith",
-    department: "Ophthalmology",
-    specialty: "Cataract Surgery, Glaucoma",
-    experience: "20 years",
-    availability: "Tue, Thu",
-    rating: 4.8,
-    image: "/placeholder.svg"
-  }
-];
-
 const Doctors = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [departmentFilter, setDepartmentFilter] = useState<string>("");
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [departments, setDepartments] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   
-  const departments = [...new Set(doctors.map(doctor => doctor.department))];
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const apiUrl = import.meta.env.VITE_API_URL;
+        if (!apiUrl) {
+          throw new Error("API URL not configured");
+        }
+
+        const response = await fetch(`${apiUrl}/api/doctors`, {
+          method: "GET",
+          headers: {
+            "Accept": "application/json",
+          },
+          credentials: "include",
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch doctors");
+        }
+
+        const data = await response.json();
+        setDoctors(data);
+        
+        // Extract unique departments from the doctors data
+        const uniqueDepartments = [...new Set(data.map((doctor: Doctor) => doctor.department))] as string[];
+        setDepartments(uniqueDepartments);
+      } catch (err) {
+        console.error("Error fetching doctors:", err);
+        const errorMessage = err instanceof Error ? err.message : "Failed to fetch doctors";
+        setError(errorMessage);
+        toast.error(errorMessage);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchDoctors();
+  }, []);
   
   const filteredDoctors = doctors.filter(doctor => {
     const matchesSearch = 
       doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       doctor.specialty.toLowerCase().includes(searchTerm.toLowerCase());
     
-    const matchesDepartment = departmentFilter === "" || doctor.department === departmentFilter;
+    const matchesDepartment = departmentFilter === "all" || doctor.department === departmentFilter;
     
     return matchesSearch && matchesDepartment;
   });
@@ -104,8 +83,32 @@ const Doctors = () => {
     navigate(`/book-appointment?doctor=${doctorId}`);
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 p-4 md:p-8 pt-16 md:pt-24 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-muted-foreground">Loading doctors...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 p-4 md:p-8 pt-16 md:pt-24 flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <p className="text-red-500 mb-4">{error}</p>
+            <Button onClick={() => window.location.reload()}>Try Again</Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+    <div className="min-h-screen bg-gray-50 p-4 md:p-8 pt-16 md:pt-24">
       <div className="max-w-6xl mx-auto space-y-6">
         <div className="flex flex-col md:flex-row justify-between gap-4">
           <div>
@@ -130,7 +133,7 @@ const Doctors = () => {
               <SelectValue placeholder="All Departments" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Departments</SelectItem>
+              <SelectItem value="all">All Departments</SelectItem>
               {departments.map((dept) => (
                 <SelectItem key={dept} value={dept}>{dept}</SelectItem>
               ))}

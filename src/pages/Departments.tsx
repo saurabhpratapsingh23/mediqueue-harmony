@@ -1,11 +1,11 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { AppCard } from "@/components/ui/AppCard";
 import { Input } from "@/components/ui/input";
-import { Hospital, Users, Calendar, Search } from "lucide-react";
+import { Hospital, Users, Calendar, Search, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface Department {
   id: string;
@@ -16,68 +16,79 @@ interface Department {
   image?: string;
 }
 
-const departments: Department[] = [
-  {
-    id: "cardio",
-    name: "Cardiology",
-    description: "Specialized care for heart and cardiovascular conditions.",
-    doctors: 7,
-    waitTime: "~20 min",
-    image: "/placeholder.svg"
-  },
-  {
-    id: "ortho",
-    name: "Orthopedics",
-    description: "Treatment for bones, joints, ligaments, tendons, and muscles.",
-    doctors: 5,
-    waitTime: "~35 min",
-    image: "/placeholder.svg"
-  },
-  {
-    id: "neuro",
-    name: "Neurology",
-    description: "Diagnosis and treatment of disorders of the nervous system.",
-    doctors: 4,
-    waitTime: "~45 min",
-    image: "/placeholder.svg"
-  },
-  {
-    id: "dermo",
-    name: "Dermatology",
-    description: "Care for conditions related to skin, hair, and nails.",
-    doctors: 3,
-    waitTime: "~15 min",
-    image: "/placeholder.svg"
-  },
-  {
-    id: "pedia",
-    name: "Pediatrics",
-    description: "Healthcare for infants, children, and adolescents.",
-    doctors: 6,
-    waitTime: "~25 min",
-    image: "/placeholder.svg"
-  },
-  {
-    id: "ophthal",
-    name: "Ophthalmology",
-    description: "Diagnosis and treatment of eye disorders.",
-    doctors: 4,
-    waitTime: "~30 min",
-    image: "/placeholder.svg"
-  }
-];
-
 const Departments = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const apiUrl = import.meta.env.VITE_API_URL;
+        if (!apiUrl) {
+          throw new Error("API URL not configured");
+        }
+
+        const response = await fetch(`${apiUrl}/api/departments`, {
+          method: "GET",
+          headers: {
+            "Accept": "application/json",
+          },
+          credentials: "include",
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch departments");
+        }
+
+        const data = await response.json();
+        setDepartments(data);
+      } catch (err) {
+        console.error("Error fetching departments:", err);
+        const errorMessage = err instanceof Error ? err.message : "Failed to fetch departments";
+        setError(errorMessage);
+        toast.error(errorMessage);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchDepartments();
+  }, []);
   
   const filteredDepartments = departments.filter(dept => 
     dept.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     dept.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 p-4 md:p-8 pt-16 md:pt-24 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-muted-foreground">Loading departments...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 p-4 md:p-8 pt-16 md:pt-24 flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <p className="text-red-500 mb-4">{error}</p>
+            <Button onClick={() => window.location.reload()}>Try Again</Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+    <div className="min-h-screen bg-gray-50 p-4 md:p-8 pt-16 md:pt-24">
       <div className="max-w-6xl mx-auto space-y-6">
         <div className="flex flex-col md:flex-row justify-between gap-4">
           <div>

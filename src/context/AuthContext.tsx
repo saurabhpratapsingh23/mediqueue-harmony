@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -16,7 +15,7 @@ interface User {
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string, token: string) => Promise<void>;
   register: (name: string, email: string, password: string, role: UserRole) => Promise<void>;
   logout: () => void;
   error: string | null;
@@ -24,59 +23,75 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Function to decode JWT token
+const decodeToken = (token: string): { sub: string; role: string } | null => {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload);
+  } catch (error) {
+    console.error('Error decoding token:', error);
+    return null;
+  }
+};
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  // Check for stored user on mount
+  // Check for stored token and user on mount
   useEffect(() => {
-    const storedUser = localStorage.getItem("mediq_user");
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (err) {
-        console.error("Failed to parse stored user", err);
-        localStorage.removeItem("mediq_user");
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = decodeToken(token);
+      if (decodedToken) {
+        const userData: User = {
+          id: decodedToken.sub,
+          email: decodedToken.sub,
+          name: decodedToken.sub.split('@')[0], // Use email username as name
+          role: decodedToken.role.toLowerCase() as UserRole,
+        };
+        setUser(userData);
+      } else {
+        // If token is invalid, remove it
+        localStorage.removeItem("token");
       }
     }
     setLoading(false);
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string, token: string) => {
     setLoading(true);
     setError(null);
     
     try {
-      // Simulate API call with timeout
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Mock users for testing
-      const mockUsers = [
-        { id: "p1", name: "John Patient", email: "patient@example.com", password: "password", role: "patient" as UserRole },
-        { id: "d1", name: "Dr. Sarah", email: "doctor@example.com", password: "password", role: "doctor" as UserRole },
-        { id: "a1", name: "Admin User", email: "admin@example.com", password: "password", role: "admin" as UserRole },
-      ];
-      
-      const foundUser = mockUsers.find(u => u.email === email && u.password === password);
-      
-      if (!foundUser) {
-        throw new Error("Invalid email or password");
+      const decodedToken = decodeToken(token);
+      if (!decodedToken) {
+        throw new Error("Invalid token");
       }
-      
-      // Create user without password
-      const { password: _, ...userWithoutPassword } = foundUser;
-      setUser(userWithoutPassword);
-      localStorage.setItem("mediq_user", JSON.stringify(userWithoutPassword));
+
+      const userData: User = {
+        id: decodedToken.sub,
+        email: decodedToken.sub,
+        name: decodedToken.sub.split('@')[0], // Use email username as name
+        role: decodedToken.role.toLowerCase() as UserRole,
+      };
+
+      setUser(userData);
+      localStorage.setItem("token", token);
       
       // Redirect based on role
-      if (foundUser.role === "patient") {
+      if (userData.role === "patient") {
         navigate("/dashboard");
-      } else if (foundUser.role === "doctor") {
-        navigate("/doctor-dashboard");
-      } else if (foundUser.role === "admin") {
-        navigate("/admin-dashboard");
+      } else if (userData.role === "doctor") {
+        navigate("/dashboard");
+      } else if (userData.role === "admin") {
+        navigate("/dashboard");
       }
       
       toast.success("Login successful");
@@ -116,9 +131,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (role === "patient") {
         navigate("/dashboard");
       } else if (role === "doctor") {
-        navigate("/doctor-dashboard");
+        navigate("/dashboard");
       } else if (role === "admin") {
-        navigate("/admin-dashboard");
+        navigate("/dashboard");
       }
       
       toast.success("Registration successful");
@@ -137,6 +152,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     setUser(null);
+    localStorage.removeItem("token");
     localStorage.removeItem("mediq_user");
     navigate("/");
     toast.info("You have been logged out");

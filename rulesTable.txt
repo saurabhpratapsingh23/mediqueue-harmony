@@ -1,0 +1,12 @@
+ 
+
+
+#api endpoints for CRUD operation for appointment
+ | Endpoint | Method | Auth Required | Purpose
+ | /api/appointments | GET | ✅ Yes (Admin/Patient) | Get all appointments
+ | /api/appointments/{id} | GET | ✅ Yes (Admin/Patient) | Get appointment by ID
+ | /api/appointments/patient/{patientId} | GET | ✅ Yes (Patient) | Get appointments by patient
+ | /api/appointments | POST | ✅ Yes (Patient) | Book appointment (auto-block slot, send emails)
+ | /api/appointments/cancel/{appointmentId} | PUT | ✅ Yes (Patient) | Cancel appointment (auto-free slot, send emails)
+ | /api/appointments/{id} | DELETE | ✅ Yes (Admin) | Delete appointment permanently
+

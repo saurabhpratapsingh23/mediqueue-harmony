@@ -1,16 +1,17 @@
-
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AppButton } from "@/components/ui/AppButton";
 import { Menu, X, User, LogOut } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { cn } from "@/lib/utils";
+import Doctors from "@/pages/Doctors"; 
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   // Handle scroll event to change navbar appearance
   useEffect(() => {
@@ -25,6 +26,13 @@ const Navbar = () => {
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
+
+  const handleViewDoctors = () => {
+    navigate("/doctors");
+  };
+
+  // Check if user is admin
+  const isAdmin = user?.role === "admin";
 
   return (
     <header
@@ -126,6 +134,30 @@ const Navbar = () => {
                     >
                       Medical Records
                     </Link>
+                    {isAdmin && (
+                      <Link
+                        to="/admin/doctors"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Manage Doctors
+                      </Link>
+                    )}
+                    {isAdmin && (
+                      <Link
+                        to="/admin/statistics"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        System Statistics
+                      </Link>
+                    )}
+                    {(isAdmin || user?.role === "doctor") && (
+                      <Link
+                        to="/manage-queue"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Manage Queue
+                      </Link>
+                    )}
                     <button
                       onClick={logout}
                       className="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -153,24 +185,47 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Menu Button with enhanced animation */}
         <button
-          className="md:hidden p-2 rounded-md hover:bg-accent transition-colors"
+          className="md:hidden p-2 rounded-md hover:bg-accent transition-colors relative"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
-          {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          <div className="relative w-5 h-5">
+            <Menu 
+              size={20} 
+              className={cn(
+                "absolute inset-0 transition-all duration-300 transform",
+                isMobileMenuOpen ? "opacity-0 rotate-90 scale-0" : "opacity-100 rotate-0 scale-100"
+              )} 
+            />
+            <X 
+              size={20} 
+              className={cn(
+                "absolute inset-0 transition-all duration-300 transform",
+                isMobileMenuOpen ? "opacity-100 rotate-0 scale-100" : "opacity-0 -rotate-90 scale-0"
+              )} 
+            />
+          </div>
         </button>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu with close button */}
       <div
         className={cn(
           "md:hidden fixed inset-0 z-40 bg-background/95 backdrop-blur-sm transition-transform duration-300 ease-in-out pt-20",
           isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
         )}
       >
-        <div className="container px-4 mx-auto flex flex-col space-y-6 py-8">
-          <nav className="flex flex-col space-y-4">
+        {/* Close button inside mobile menu */}
+        <button
+          onClick={() => setIsMobileMenuOpen(false)}
+          className="absolute top-4 right-4 p-2 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors"
+        >
+          <X size={20} className="text-primary" />
+        </button>
+        
+        <div className="container px-4 mx-auto h-full overflow-y-auto pb-20">
+          <nav className="flex flex-col space-y-4 py-8">
             <Link
               to="/landing"
               className={cn(
@@ -261,6 +316,45 @@ const Navbar = () => {
                 >
                   Medical Records
                 </Link>
+                {isAdmin && (
+                  <Link
+                    to="/admin/doctors"
+                    className={cn(
+                      "px-4 py-3 rounded-md text-sm font-medium transition-colors",
+                      location.pathname === "/admin/doctors"
+                        ? "bg-accent text-primary"
+                        : "hover:bg-accent/50"
+                    )}
+                  >
+                    Manage Doctors
+                  </Link>
+                )}
+                {isAdmin && (
+                  <Link
+                    to="/admin/statistics"
+                    className={cn(
+                      "px-4 py-3 rounded-md text-sm font-medium transition-colors",
+                      location.pathname === "/admin/statistics"
+                        ? "bg-accent text-primary"
+                        : "hover:bg-accent/50"
+                    )}
+                  >
+                    System Statistics
+                  </Link>
+                )}
+                {(isAdmin || user?.role === "doctor") && (
+                  <Link
+                    to="/manage-queue"
+                    className={cn(
+                      "px-4 py-3 rounded-md text-sm font-medium transition-colors",
+                      location.pathname === "/manage-queue"
+                        ? "bg-accent text-primary"
+                        : "hover:bg-accent/50"
+                    )}
+                  >
+                    Manage Queue
+                  </Link>
+                )}
                 <button
                   onClick={logout}
                   className="px-4 py-3 text-left rounded-md text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors flex items-center space-x-2"

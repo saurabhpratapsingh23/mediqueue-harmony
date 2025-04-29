@@ -1,11 +1,10 @@
-
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AppCard } from "@/components/ui/AppCard";
-import { Clock, Calendar, FileText, Users, List, Hospital } from "lucide-react";
+import { Clock, Calendar, FileText, Users, List, Hospital, LayoutDashboard } from "lucide-react";
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -20,6 +19,7 @@ const Dashboard = () => {
   if (!user) return null;
 
   const patientActions = [
+    { title: "Patient Dashboard", icon: <LayoutDashboard className="h-6 w-6" />, url: "/patient-dashboard" },
     { title: "Book Appointment", icon: <Calendar className="h-6 w-6" />, url: "/book-appointment" },
     { title: "Check Queue Status", icon: <List className="h-6 w-6" />, url: "/check-queue" },
     { title: "View Records", icon: <FileText className="h-6 w-6" />, url: "/records" },
@@ -28,7 +28,7 @@ const Dashboard = () => {
   ];
 
   const doctorActions = [
-    { title: "View Appointments", icon: <Calendar className="h-6 w-6" />, url: "/appointments" },
+    { title: "View Appointments", icon: <Calendar className="h-6 w-6" />, url: "/doctor/appointments" },
     { title: "Manage Queue", icon: <Clock className="h-6 w-6" />, url: "/manage-queue" },
     { title: "Patient Records", icon: <FileText className="h-6 w-6" />, url: "/patient-records" },
   ];
@@ -44,7 +44,7 @@ const Dashboard = () => {
     user.role === "doctor" ? doctorActions : adminActions;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+    <div className="min-h-screen bg-gray-50 p-4 md:p-8 pt-16 md:pt-24">
       <Card className="mb-8">
         <CardHeader>
           <CardTitle>Welcome, {user.name}</CardTitle>
