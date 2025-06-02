@@ -1,22 +1,22 @@
-# Welcome to your Lovable project
+# Welcome to MediQ project
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/9fc68400-f13d-4504-b60d-ca64b45ef088
 
-## How can I edit this code?
 
-There are several ways of editing your application.
+## How can I edit this code? 
+Well No, you can't. Rather I would suggest you to clone this project and use your own imaginations to enhance this project.
 
-**Use Lovable**
+**See Live Preview**
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/9fc68400-f13d-4504-b60d-ca64b45ef088) and start prompting.
+Simply visit the https://mediqueue-harmony.vercel.app/ 
 
-Changes made via Lovable will be committed automatically to this repo.
+
 
 **Use your preferred IDE**
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+If you want to work locally using your own IDE, you can clone this repo and push changes.
+
 
 The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
@@ -59,11 +59,14 @@ This project is built with .
 - React
 - shadcn-ui
 - Tailwind CSS
+- Spring-Boot
+- PostgreSQL
+- RazorPay integration
+- Twilio OTP services
 
-## How can I deploy this project?
 
-Simply open [Lovable](https://lovable.dev/projects/9fc68400-f13d-4504-b60d-ca64b45ef088) and click on Share -> Publish.
 
-## I want to use a custom domain - is that possible?
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+
+
+## Feel free to ask your questions regarding this project. Backend code is still not online yet, We will upload it soon.
