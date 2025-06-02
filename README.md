@@ -1,6 +1,12 @@
 # Welcome to MediQ project
 
 ## Project info
+MediQ is a smart healthcare queue management system designed to streamline patient flow, reduce wait times, and enhance the overall healthcare experience.
+
+
+## What problem does this project solve?
+Our project addresses long patient waiting times, chaotic appointment scheduling, inefficient emergency handling, and poor resource utilization in healthcare facilities by introducing real-time queue tracking, AI-based emergency prioritization, and teleconsultations.
+
 
 
 
@@ -9,7 +15,7 @@ Well No, you can't. Rather I would suggest you to clone this project and use you
 
 **See Live Preview**
 
-Simply visit the https://mediqueue-harmony.vercel.app/ 
+Simply visit the (https://mediqueue-harmony.vercel.app/ )
 
 
 
@@ -70,3 +76,7 @@ This project is built with .
 
 
 ## Feel free to ask your questions regarding this project. Backend code is still not online yet, We will upload it soon.
+
+
+##contact
+email: sauravpratapsingh172@gmail.com   and  kerniriya43@gmail.com.
